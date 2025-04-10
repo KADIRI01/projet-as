@@ -12,6 +12,6 @@ jobs:
 
       - name: Compiler et tester
         run: |
-          gcc chiffrement.c test.c -o test
+          gcc cipher.c test.c -o test
           ./test
 
