@@ -1,16 +1,53 @@
-name: C Test CI
+name: CI-CD with Canary
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - master
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Cloner le dépôt
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Compiler et tester
+      - name: Compile with test
+        run: gcc cipher.c test.c -o test
+
+      - name: Run tests
+        run: ./test
+
+  deploy-canary:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Create deploy directory for canary
         run: |
-          gcc cipher.c test.c -o test
-          ./test
+          mkdir -p deploy/canary
+
+      - name: Build production binary
+        run: gcc cipher.c -o cipher
+
+      - name: Deploy canary version
+        run: |
+          cp cipher deploy/canary/
+          # Simple canary test (simulate "monitoring")
+          ./deploy/canary/cipher <<< "canarytest" || exit 1
+
+  deploy-prod:
+    needs: deploy-canary
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Create deploy directory for prod
+        run: |
+          mkdir -p deploy/prod
+
+      - name: Promote to production
+        run: |
+          cp deploy/canary/cipher deploy/prod/
+
