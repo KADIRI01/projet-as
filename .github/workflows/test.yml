@@ -1,42 +1,17 @@
-name: Build, Test and Deploy
+name: C Test CI
 
-on:
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
+on: [push, pull_request]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: Cloner le dépôt
+        uses: actions/checkout@v3
 
-      - name: Compile code
-        run: gcc cipher.c main.c -o cipher
-
-      - name: Run tests
-        run: ./cipher
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build  # Assure que le déploiement se fait après la compilation et les tests
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Create deploy folder
+      - name: Compiler et tester
         run: |
-          mkdir -p deploy
-          
-      - name: Deploy compiled files
-        run: |
-          cp cipher deploy/
-          cp main.c deploy/
-          cp cipher.c deploy/
+          gcc chiffrement.c test.c -o test
+          ./test
 
