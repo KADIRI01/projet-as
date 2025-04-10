@@ -29,7 +29,7 @@ jobs:
           mkdir -p deploy/canary
 
       - name: Build production binary
-        run: gcc cipher.c -o cipher
+        run: gcc cipher.c main.c -o cipher
 
       - name: Deploy canary version
         run: |
