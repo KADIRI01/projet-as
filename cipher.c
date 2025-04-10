@@ -1,15 +1,12 @@
+// chiffrement.c
 #include "cipher.h"
-#include <ctype.h>
 
-void encrypt(char *text, int key) {
-    for (int i = 0; text[i] != '\0'; i++) {
-        if (isalpha(text[i])) {
-            char base = isupper(text[i]) ? 'A' : 'a';
-            text[i] = (text[i] - base + key) % 26 + base;
-        }
+void simple_encrypt(const char *input, char *output) {
+    int i = 0;
+    while (input[i] != '\0') {
+        output[i] = input[i] + 1;  // décalage simple
+        i++;
     }
+    output[i] = '\0';
 }
 
-void decrypt(char *text, int key) {
-    encrypt(text, 26 - key);  // inverse du chiffrement
-}

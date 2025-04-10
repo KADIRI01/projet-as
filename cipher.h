@@ -1,7 +1,8 @@
-#ifndef CIPHER_H
-#define CIPHER_H
+// chiffrement.h
+#ifndef CHIFFREMENT_H
+#define CHIFFREMENT_H
 
-void encrypt(char *text, int key);
-void decrypt(char *text, int key);
+void simple_encrypt(const char *input, char *output);
 
 #endif
+
